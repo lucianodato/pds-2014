@@ -35,3 +35,5 @@ Thumbs.db
 # Mines #
 #########
 octave-core
+octave-workspace
+.m~
