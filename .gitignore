@@ -36,4 +36,5 @@ Thumbs.db
 #########
 octave-core
 octave-workspace
-.m~
+*.m~
+*.gitignore~
