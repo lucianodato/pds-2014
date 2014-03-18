@@ -1,0 +1,7 @@
+[t,s] = senoidal (Fm,f,fase,t_ini,t_fin,amp)
+	
+	Tm = 1/Fm
+	t = t_ini : Tm : t_fin - Tm
+	s = amp * sin(2*pi*f*t+fase)
+	
+	
