@@ -54,7 +54,7 @@ plot(t,x,'k');
 
 t_ini = 0;
 t_fin = 1;
-fase = 0;
+fase = 1;
 %Cuadrada 1
 [t,c] = cuadrada(Fm,fs_1,fase,t_ini,t_fin);
 subplot(3,4,9);

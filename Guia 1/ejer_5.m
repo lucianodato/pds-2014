@@ -9,4 +9,4 @@ A = 1;
 
 %Senoidal 1
 [t,s] = senoidal(Fm,fs,fase,t_ini,t_fin,A);
-plot(t,s,'k');
+stem(t,s,'k');

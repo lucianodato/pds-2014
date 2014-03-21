@@ -7,10 +7,10 @@ function [t,c]=cuadrada(Fm,f,fase,t_ini,t_fin)
 	
 	Tm = 1/Fm;
 	t = t_ini : Tm : t_fin - Tm;
-	c = zeros(size(t));
+	c = zeros(1,length(t));
 	m = mod(2*pi*f*t + fase,2*pi);
-	for i = 1:size(t)
-		if (m(i) == pi)
+	for i = 1:length(m)
+		if (m(i) >= pi)
 			c(i) = -1;
 		else
 			c(i) = 1;

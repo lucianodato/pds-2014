@@ -12,7 +12,3 @@ function [t,x]=sinc(Fm,f,t_ini,t_fin)
 		x = sin(2*pi*f*t) ./ (2*pi*f*t);
 	endif
 endfunction
-	
-
-	
-			 
