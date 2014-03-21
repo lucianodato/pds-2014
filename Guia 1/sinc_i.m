@@ -1,9 +1,9 @@
 function [tn] = sinc_i(t)
 
-if (t == 0)
-	tn = 1;
+if (t != 0)
+	tn = (sin(t))/t;
 else
-	tn = sin(t)/t;
+	tn = 1;
 endif
 
 endfunction

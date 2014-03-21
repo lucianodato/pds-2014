@@ -11,27 +11,28 @@ function [tn,sn] = interpolador(t,s,func,tasa)
 	%Nuevo periodo
 	Ti = 1/m;
 	% el nuevo t incluyendo las muestras nuevas
-	tn = 1:Ti:1 - Ti
+	tn = t(1):Ti:(t(n) + T) - Ti; 
+	%como en t no incluyo la ultima muestra para sacar el t_fin original deberia sumarle a el valor de t(n) un paso T
 	sn = zeros(1,m);
 	
 	%func es la opcion de funcion I de interpolacion
 	switch (func)
 	case 1
-		for i = 1:m % m es la totalidad de muestras totales despues de la interpolacion
-			for j = 1:n % n es la totalidad de muestras anteriores a la interpolacion
+		for i = 1:m % contador de m
+			for j = 1:n % contador de n
 				sn(i) = sn(i) + s(j)*escalon_i( (tn(i) - t(j) )/T);
 			endfor 
 		endfor
 	case 2
-		for i = 1:m % m es la totalidad de muestras totales despues de la interpolacion
-			for j = 1:n % n es la totalidad de muestras anteriores a la interpolacion
+		for i = 1:m % contador de m
+			for j = 1:n % contador de n
 				sn(i) = sn(i) + s(j)*lineal_i( (tn(i) - t(j) )/T);
 			endfor 
 		endfor
 	case 3
-		for i = 1:m % m es la totalidad de muestras totales despues de la interpolacion
-			for j = 1:n % n es la totalidad de muestras anteriores a la interpolacion
-				sn(i) = sn(i) + s(j)*sinc_i( (tn(i) - t(j) )/T);
+		for i = 1:m % contador de m
+			for j = 1:n % contador de n
+				sn(i) = sn(i)+ s(j)*sinc_i( (tn(i) - t(j) )/T);
 			endfor 
 		endfor
 	endswitch

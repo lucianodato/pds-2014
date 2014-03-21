@@ -21,4 +21,4 @@ stem(t,s,'k');
 
 [tn,sn] = interpolador(t,s,3,4);
 subplot(2,1,2);
-stem(tn,sn,'k');
+plot(tn,sn,'k');
