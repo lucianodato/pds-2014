@@ -1,7 +1,7 @@
 function [tn,sn] = interpolador(t,s,func,tasa)
 	%En primera instancia tengo que tener los datos de la señal original
 	
-	%cantidad de muestras originales o Fm original
+	%cantidad de muestras originales o Fm original (siempre y cuando t_ini sea 0 y t_fin sea 1)
 	n = length(t);
 	%Periodo Original
 	T= 1/n;
@@ -20,19 +20,19 @@ function [tn,sn] = interpolador(t,s,func,tasa)
 	case 1
 		for i = 1:m % contador de m
 			for j = 1:n % contador de n
-				sn(i) = sn(i) + s(j)*escalon_i( (tn(i) - t(j) )/T);
+				sn(i) = sn(i) + s(j)*escalon_i( ( tn(i) - t(j) )/T );
 			endfor 
 		endfor
 	case 2
 		for i = 1:m % contador de m
 			for j = 1:n % contador de n
-				sn(i) = sn(i) + s(j)*lineal_i( (tn(i) - t(j) )/T);
+				sn(i) = sn(i) + s(j)*lineal_i( ( tn(i) - t(j) )/T );
 			endfor 
 		endfor
 	case 3
 		for i = 1:m % contador de m
 			for j = 1:n % contador de n
-				sn(i) = sn(i)+ s(j)*sinc_i( (tn(i) - t(j) )/T);
+				sn(i) = sn(i) + s(j)*sinc_i( ( tn(i) - t(j) )/T );
 			endfor 
 		endfor
 	endswitch

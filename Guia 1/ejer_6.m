@@ -2,8 +2,8 @@
 
 t_ini = 0;
 t_fin = 1;
-Fm = 30;
-fs = 10;
+Fm = 10;
+fs = 0.5;
 fase = 0;
 A = 1;
 
@@ -19,6 +19,6 @@ stem(t,s,'k');
 % tasa es la cantidad de veces que voy a aumentar el muestreo
 % interpolador(t,s,opcion,tasa)
 
-[tn,sn] = interpolador(t,s,3,4);
+[tn,sn] = interpolador(t,s,1,4);
 subplot(2,1,2);
-plot(tn,sn,'k');
+stem(tn,sn,'k');
