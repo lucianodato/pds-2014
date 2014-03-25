@@ -12,7 +12,7 @@ for i = 1:f %Avanza sobre t
 
 	
 	for j = 1:c %avanza sobre las diferentes señales
-		tg(j) = mat(j,i);%devuelve la señal de la matriz mats fila i
+		tg(j) = mat(i,j);%devuelve la señal de la matriz mats fila i
 	endfor
 	
 	%Calculo la media
