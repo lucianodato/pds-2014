@@ -27,6 +27,6 @@ for i = 1:length(t)
 		tg(j) = mats(j,i);%devuelve la señal de la matriz mats fila i
 	endfor
 	subplot(length(t),n,i);
-	hist(tg);s
+	hist(tg);
 endfor
 
