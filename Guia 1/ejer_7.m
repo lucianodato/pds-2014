@@ -1,40 +1,46 @@
 %Inicializacion de parametros
 
+tolerancia = 0.02;
 t_ini = 0;
 t_fin = 1;
-Fm = 10;
-T = 1/Fm;
-t = t_ini:T:t_fin - T;
-%n es el numero de señales aleatorias
-n = 10;
+media_ref = 0;
+varianza_ref = 1;
+
+%--------------------Prueba 0 - 3 Señales Fm 10
+
+disp("Prueba 0");
+
+Fm = 500;% Cantidad de muestras
+n = 500;% Cantidad de Realizaciones
+f = n;
+c = Fm;
+
 %vector de n señales aleatorias con length(t) muestras
-mats = randn(n,length(t));%media 0 varianza 1 por defecto
+mats0 = randn(n,Fm);%media 0 varianza 1 por defecto
 
-%Compruebo estacionariedad
-for i = 1:n
-	tg = zeros(1,length(t));
-	
-	for j = 1:length(t)
-		tg(j) = mats(i,j);%devuelve la señal de la matriz mats fila i
-	endfor
-	
-	%Calculo la media
-	disp ("Valor Medio"),disp(median(tg));
-	%Calculo la varianza
-	disp("Varianza"),disp(var(tg));
-	
-	%Grafico
-	hold on;
-	hist(tg);
-endfor
 
-#%Compruebo ergodicidad
-#for i = 1:length(t)
-#	tg = zeros(1,n);
-#	for j = 1:n
-#		tg(j) = mats(j,i);%devuelve la señal de la matriz mats fila i
-#	endfor
-#	subplot(length(t),n,i);
-#	hist(tg);
-#endfor
+%Verifico Estacionariedad
+[me,va] = calculos_med_var(mats0,c,f);
+
+if (abs(media_ref - me) < tolerancia && abs(varianza_ref - va) < tolerancia)
+	disp("Verifica Estacionariedad");
+	disp("Media Est"), disp(me);
+	disp("Varianza Est"), disp(va);
+	
+	%Verifico Ergodicidad
+	[me2,va2] = calculos_med_var(mats0,f,c);
+	
+	if (abs(me - me2) < tolerancia && abs(va - va2) < tolerancia)
+		disp("Verifica Ergodicidad");
+		disp("Media Erg"), disp(me2);
+		disp("Varianza Erg"), disp(va2);
+	else
+		disp("No Verifica Ergodicidad");
+	endif
+else
+	disp("No Verifica Estacionariedad");
+endif
+
+
+
 
