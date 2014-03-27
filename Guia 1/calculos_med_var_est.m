@@ -1,18 +1,18 @@
-function [me,va] = calculos_med_var(mat,f,c)
+function [me,va] = calculos_med_var_est(mat,c,f)
 
-%Inicializo v (la funcion lo va a cambiar en el caso de que no verifique)
-va = zeros(1,f);
-me = zeros(1,f);
-medias = zeros(1,c);
-varianzas = zeros(1,c);
+%Inicializo v
+va = zeros(1,c);
+me = zeros(1,c);
+medias = zeros(1,f);
+varianzas = zeros(1,f);
 
 %Primero calculo y almaceno las medias y las varianzas
-for i = 1:f %Avanza sobre t
-	tg = zeros(1,c);
+for i = 1:c %Avanza sobre t
+	tg = zeros(1,f);
 
 	
-	for j = 1:c %avanza sobre las diferentes señales
-		tg(j) = mat(j,i);%devuelve la señal de la matriz mats fila i
+	for j = 1:f %avanza sobre las diferentes señales
+		tg(j) = mat(j,i);%devuelve la señal de la matriz mats fila j
 	endfor
 	
 	%Calculo la media

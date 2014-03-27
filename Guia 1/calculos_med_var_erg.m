@@ -1,6 +1,6 @@
-function [me,va] = calculos_med_var(mat,f,c)
+function [me,va] = calculos_med_var_erg(mat,f,c)
 
-%Inicializo v (la funcion lo va a cambiar en el caso de que no verifique)
+%Inicializo v
 va = zeros(1,f);
 me = zeros(1,f);
 medias = zeros(1,c);
@@ -18,7 +18,7 @@ for i = 1:f %Avanza sobre t
 	%Calculo la media
 	medias(i) = mean(tg); 
 	
-	%Calculo la varianza
+	%Calculo la varianza - Porque no esta centrada en 1???
 	varianzas(i) = var(tg);
 	
 endfor

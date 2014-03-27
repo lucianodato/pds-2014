@@ -30,8 +30,7 @@ if (abs(media_ref - me) < tolerancia && abs(varianza_ref - va) < tolerancia)
 	%Verifico Ergodicidad
 	[me2,va2] = calculos_med_var_erg(mats0,f,c);
 	
-	% Faltria controlar los otros extremos o con el abs alcanza??
-	if (abs(me - me2) < (media_ref + tolerancia) && abs(va - va2) < (varianza_ref + tolerancia) )
+	if (abs(me - me2) < tolerancia && abs(va - va2) < tolerancia )
 		disp("Verifica Ergodicidad");
 		disp("Media Erg"), disp(me2);
 		disp("Varianza Erg"), disp(va2);
