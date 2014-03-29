@@ -1,12 +1,12 @@
 %Inicializacion de parametros
 
-tolerancia = 0.002;
+tolerancia = 0.02;
 t_ini = 0;
 t_fin = 1;
 media_ref = 0;
 varianza_ref = 1;
 
-%--------------------Prueba 0
+%Prueba 0
 
 disp("Prueba 0");
 
