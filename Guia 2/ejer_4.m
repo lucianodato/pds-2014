@@ -17,15 +17,15 @@ A2 = 1;
 Tm = 1 / Fm;
 t = t_ini : Tm : (t_fin - Tm);
 
-% ------- Señal compleja (Expresado por Sen y Cos) -------
+% ------- Señal compleja (Expresado por Sen y Cos) ------- %2428265 Es el numero de telefono
 
 s1r = cos(2*pi*fs_1*t + fase1);
 s1i = sin(2*pi*fs_1*t + fase1);
-s1c = s1r + j*s1i;
+s1c = s1r + j*s1i
 
 s2r = cos(2*pi*fs_2*t + fase2);
 s2i = sin(2*pi*fs_2*t + fase2);
-s2c = s2r + j*s2i;
+s2c = s2r + j*s2i
 
 %Señal Compleja 1
 %[t,s1] = senoidal(Fm,fs_1,fase1,t_ini,t_fin,A1);
