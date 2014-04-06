@@ -17,7 +17,7 @@ A2 = 1;
 Tm = 1 / Fm;
 t = t_ini : Tm : (t_fin - Tm);
 
-% ------- Señal compleja (Expresado por Sen y Cos) ------- %2428265 Es el numero de telefono
+% ------- Señal compleja (Expresado por Sen y Cos) ------- 
 
 s1r = cos(2*pi*fs_1*t + fase1);
 s1i = sin(2*pi*fs_1*t + fase1);
