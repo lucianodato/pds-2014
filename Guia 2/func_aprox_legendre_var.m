@@ -1,24 +1,19 @@
-function [s,a1,a3] = func_aprox_legendre_var(t)
-	s = zeros(length(t),1);
-	a1 = zeros(length(t),1);
-	a3 = zeros(length(t),1);
-	
-	T= 1/length(t);
+function [s,a1,a3] = func_aprox_legendre_var(t,T,vari)
 	
 	%Genero los vectores de coeficientes variados
-	a1(1) = sqrt(3/2) - 0.5;
-	for i = 1:length(t)-1
-		a1(i+1) = a1(i) + T;
-	endfor
+	alpha1 = sqrt(3/2);
+	a1 = alpha1-vari:T:alpha1+vari;
 
-	a3(1) = -1*sqrt(7/32) -0.5;
-	for i = 1:length(t)-1
-		a3(i+1) = a3(i) + T;
-	endfor
+	alpha3 = -1*sqrt(7/32);
+	a3 = alpha3-vari:T:alpha3+vari;
 	
 	for i = 1:length(a1)
 		for j = 1:length(a3)
-			s =a1(i)*sqrt((3/2)*t) + a3(j)*(sqrt(7/2))*( (5/2)*t.^3 - (3/2)*t );
+			for w = 1:length(t)
+				s(i,j,w) =a1(i)*sqrt(3/2)*t(w) + a3(j)*(sqrt(7/2))*( (5/2)*t(w)^3 - (3/2)*t(w) );
+			endfor
 		endfor
 	endfor
+	
+	
 endfunction
