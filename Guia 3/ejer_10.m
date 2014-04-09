@@ -4,7 +4,7 @@ T=1/Fm;
 s = load("necg.txt");
 N=length(s);
 df=Fm/N;
-freq = -Fm/2:df:Fm/2;
+freq = -Fm/2:df:Fm/2-df;
 
 subplot(3,1,1);
 plot(s);

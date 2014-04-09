@@ -8,7 +8,7 @@ t2=t_ini:T:2*t_fin-T;
 N = length(t);
 N2 = length(t2);
 df= Fm/N2;
-freq = -Fm/2:df:Fm/2;
+freq = -Fm/2:df:Fm/2-df;
 
 s1=sin(2*pi*4*t);
 s1(N+1:N2)= zeros(1,N);

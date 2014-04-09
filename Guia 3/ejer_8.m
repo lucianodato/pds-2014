@@ -6,7 +6,7 @@ T=1/Fm;
 t=t_ini:T:t_fin-T;
 N = length(t);
 df= Fm/N;
-freq = -Fm/2:df:Fm/2;
+freq = -Fm/2:df:Fm/2-df;
 
 % A
 

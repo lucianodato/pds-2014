@@ -9,7 +9,7 @@ t_fin = 1;
 t=t_ini:T:t_fin-T;
 N=length(t);
 df= Fm/N;
-freq = -Fm/2:df:Fm/2;
+freq = -Fm/2:df:Fm/2-df;
 
 %Sin ventana o ventana rectangular?
 s1=impulso(t);

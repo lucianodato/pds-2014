@@ -16,7 +16,7 @@ plot(s);
 
 %Armo el eje de frecuencias
 df= Fm/length(t);%delta de f o resolucion de frecuencias
-freq = -Fm/2:df:Fm/2;%1 es la frecuencia inicial (+-)Fm/2 es la frecuencia nyquist
+freq = -Fm/2:df:Fm/2-df;%1 es la frecuencia inicial (+-)Fm/2 es la frecuencia nyquist
 
 fsp = fftp(s);
 subplot(3,2,2);
@@ -70,7 +70,7 @@ t_ini = 0;
 t_fin = 0.72;
 t1=t_ini:T:t_fin-T;
 df1= Fm/length(t1);
-freq1 = -Fm/2:df1:Fm/2;
+freq1 = -Fm/2:df1:Fm/2-df1;
 
 s4 = sin(2*pi*10*t1) + 4*sin(2*pi*11*t1);
 
