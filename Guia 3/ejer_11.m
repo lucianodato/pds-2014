@@ -49,3 +49,7 @@ n1la=real(ifft(f1));
 subplot(2,2,4)
 plot(n1la);
 
+
+#wavwrite(n1la,11025,32,"Señal_Filtrada.wav");
+#wavwrite(n1,11025,32,"Señal.wav");
+
