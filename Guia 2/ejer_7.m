@@ -3,7 +3,7 @@ s = load("te.txt");
 
 %Extraigo las caracteristicas posibles de la señal
 N = length(s);
-Fm = 11025; %dato del problema
+Fm = 8000; %dato del problema
 T = 1/Fm;
 
 %Guardo el archivo wav para procesarlo
