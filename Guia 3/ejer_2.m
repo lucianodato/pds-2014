@@ -42,4 +42,4 @@ disp("    En el dominio Frecuencial");
 
 verif_ortogonalidad(af,cf2);
 
-%Ninguno es ortogonal porque no son base y por lo tanto no son conjunto generador linealmente independiente???
+% La frecuencia de muestreo es clave porque si no tengo una frecuencia de muestreo que me garantice que una armonico es verdaderamente un multiplo de la fundamental entonces ya no me va a dar cero el producto interno que es lo que esta pasando aca.

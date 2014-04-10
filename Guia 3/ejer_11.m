@@ -19,7 +19,7 @@ plot(freq,fn1);
 
 %Para encontrar la nota LA (440hz y armonicos) hago 0 todo lo que no sea la nota y hago la inversa
 
-f1=fft(n1);
+f1=fft(n1);%Tener en cuenta de que la fase es parte de f1
 N1=length(f1);
 
 %Hago tres simple y saco cual es 440 y sus multiplos en frecuencias
@@ -31,7 +31,7 @@ N1=length(f1);
 
 %Pongo en 0 todas las frecuencias que no sean LA o armonicos de LA1
 %Solo considere 2 armonicos de LA
-%Igual tendria que usar un umbral de amplitud
+%Igual tendrifftpa que usar un umbral de amplitud
 umbral = 200;
 f1=abs(f1);%Esto es para que no explote
 for i = 1:N1
@@ -52,4 +52,6 @@ plot(n1la);
 %Pero la primera y la ultima nota que son las que importaba las dejo pasar
 #wavwrite(n1la,11025,32,"Señal_Filtrada.wav");
 #wavwrite(n1,11025,32,"Señal.wav");
+
+%tengo que tener en cuenta la convolucion que hago aca con el filtro es una convolucion linal y no se corresponde con la covolucion en tiempo lineal. Por eso lo que tengo que hacer es zero-padding para poder aumentas a 2*N-1 de muestras y se corresponda la convolucion. Para hacerlo menos croto pordria hacer un metodo que tome una ventana que pueda capturar la nota la y sus armonicos y recorrer la señal en tiempo y ver si cada ventana tiene la nota la de manera de decir en que seccion de tiempo le corresponde.
 
