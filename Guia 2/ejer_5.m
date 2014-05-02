@@ -11,7 +11,7 @@ t=t_ini:T:t_fin -T;
 s1 = func_orig(t);
 s2 = func_aprox_legendre(t);
 
-error1 = power(abs(s1-s2),2);
+error1 = power(norm(s1-s2),2);
 merror1 = mean(error1)
 subplot(2,2,1);
 plot(t,s1);

@@ -12,6 +12,6 @@ function [fsp] = fftp(s)
 	endfor
 	%Valores positivos
 	for i = nyquist+1:N 
-		fsp(i) = fs(i - nyquist);%desde 1 hasta nyquist +1 
+		fsp(i) = fs(i - nyquist);%desde 1 hasta nyquist
 	endfor
 endfunction

@@ -43,7 +43,7 @@ plot(freq,fs2);
 % C Y la amplitud?
 % Una formula podria ser A-señal*(Fm/2)
 
-s3=sin(2*pi*1*t);
+s3=sin(2*pi*105*t);
 
 subplot(3,2,5);
 plot(t,s3);

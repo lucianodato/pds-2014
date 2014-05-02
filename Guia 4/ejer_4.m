@@ -14,7 +14,7 @@ freq=-Fm/2:df:Fm/2-df;
 
 y1(1) = 0; %Esto seria y(0)=0 Pero pongo 1 porque no permite octave indices 0
 for i = 2:N
-	y1(i) = 5*t(i) + 2*y1(i-1);
+	y1(i) = 5*t(i);% + 2*y1(i-1);
 endfor
 
 %Sistema No Lineal

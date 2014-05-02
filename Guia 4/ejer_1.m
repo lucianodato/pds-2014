@@ -1,8 +1,8 @@
 %Ejercicio 1
 
-%Sistema Causal: En la practica significa que la ecuacion depende de los valores en tiempo actual o anteriores
+%Sistema Causal: En la practica significa que la ecuacion depende de los valores en tiempo actual o anteriores de la entrada
 
-%Sistema Lineal: Cumple con el principio de superposicion ax1 + ax2 = ay1 + ay2
+%Sistema Lineal: Cumple con el principio de superposicion a*x1 + a*x2 = a*y1 + a*y2
 
 %Sistema Invariante: Da una salida desplazada si la entrada esta desplazada. Pero el resultado no es afectado por el desplazamiento.
 
@@ -20,7 +20,7 @@ y1 =A*sin(w*T*n)*t;
 subplot(4,2,1);
 plot(y1);  
 
-%Es causal lineal y variante en el tiempo (porque lo corro y tengo distinta fase para la senoidal)
+%Es causal, lineal y variante en el tiempo (porque lo corro y tengo distinta fase para la senoidal)
 
 %2
 n0=1;
@@ -42,7 +42,7 @@ endfor
 subplot(4,2,3);
 plot(y3);  
 
-%No es causal, es lineal e invariante tiempo
+%Es causal, es lineal e invariante tiempo
 
 %4
 
