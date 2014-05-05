@@ -8,7 +8,7 @@ f=-pi:T:pi-T;
 
 #%---VER!!!
 %Transformada de Laplace
-Ts = 1/10000;%Esto es por la propiedad de que al disminuir la freq de muestreo en tiempo aumenta la definicion frecuencial
+Ts = 1/1000;%Esto es por la propiedad de que al disminuir la freq de muestreo en tiempo aumenta la definicion frecuencial
 w2= 0:Ts:2*pi-Ts;
 z2 = r*exp(j*w2);
 s = log(z2)/Ts;
@@ -23,16 +23,18 @@ plot(f2,abs(h_f));
 subplot(2,1,2);
 plot(f2,angle(h_f));
 
-#%Sacamos el valor de la frecuencia de corte a partir de buscar en el vector h
-#val_max = max(abs(h2));
-#freq_corte = 0;
-#for i = 1:length(h2)
-#	if(h2(i) <= (val_max - 3))
-#		freq_corte = i;
-#	endif
-#endfor
-#disp("Frecuencia de corte");
-#disp(freq_corte);
+%Sacamos el valor de la frecuencia de corte a partir de buscar en el vector h
+%Transformo las magnitudes a decibeles para poder hacer una comparacion correcta
+val_max = 20*log10(max(abs(h)));
+freq_corte = 0;
+for i = 1:length(h)
+	if(20*log10(abs(h(i))) <= (val_max - 20*log10(3)) )
+		freq_corte = i;
+		break;
+	endif
+endfor
+disp("Frecuencia de corte");
+disp(freq_corte);
 
 
 
