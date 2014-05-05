@@ -1,5 +1,5 @@
 %Inicializamos
-Fm=100;
+Fm=1000;
 T=1/Fm;
 w = 0:T:2*pi-T;
 r = 1;
@@ -7,31 +7,33 @@ z = r*exp(j*w);
 f=-pi:T:pi-T;
 
 #%---VER!!!
-#%Transformada de Laplace
-#Ts = 1/124;%Esto es por la propiedad de que al disminuir la freq de muestreo en tiempo aumenta la definicion frecuencial
-#w2= 0:Ts:pi-Ts;
-#z2 = r*exp(j*w2);
-#s = log(z2)/T;
-#%s = [s zeros(1,10000)];
+%Transformada de Laplace
+Ts = 1/10000;%Esto es por la propiedad de que al disminuir la freq de muestreo en tiempo aumenta la definicion frecuencial
+w2= 0:Ts:2*pi-Ts;
+z2 = r*exp(j*w2);
+s = log(z2)/Ts;
+%s = [s zeros(1,10000)];
+f2=-pi:Ts:pi-Ts;
 
-#h = (12500*s) ./ (44*s.^2 + 60225*s + 625*10^4);
-#figure(1);
-#subplot(2,1,1);
-#plot(w2,abs(h));
-#subplot(2,1,2);
-#plot(w2,angle(h));
-
+h = (12500*s) ./ (44*s.^2 + 60225*s + 625*10^4);
+h_f = [h(floor(length(h)/2)+1:length(h)) h(1:floor(length(h)/2))];
+figure(1);
+subplot(2,1,1);
+plot(f2,abs(h_f));
+subplot(2,1,2);
+plot(f2,angle(h_f));
 
 #%Sacamos el valor de la frecuencia de corte a partir de buscar en el vector h
-#val_max = max(abs(h));
+#val_max = max(abs(h2));
 #freq_corte = 0;
-#for i = 1:length(h)
-#	if(h(i) <= (val_max - 3))
+#for i = 1:length(h2)
+#	if(h2(i) <= (val_max - 3))
 #		freq_corte = i;
 #	endif
 #endfor
 #disp("Frecuencia de corte");
 #disp(freq_corte);
+
 
 
 %Transformada de Euler
