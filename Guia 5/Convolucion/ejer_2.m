@@ -24,10 +24,11 @@ c2 = conv(s1,s2);
 plot(c2);
 
 %Inciso 3 
-#%h es el impulso que hace que s1 se haga s2
-#h = deconv(s1,s2);
-#%h contiene a a y b tengo que desarmarlo en dos vectores numerador y denominador
-#%la cantidad de elementos de a y de b me dictaminaria la precision con la que el filtro aproxima y(n)? Cuantos?
+%Esto se interpreta como la convolucion entre s1 con s2 siendo s2 el polinomio que define el filtro FIR es decir el polinomio b
+%Hacemos zero padding para que la convolucion lineal se transforme en circular
+c5 = filter([s2 zeros(1,length(s1)-1)],[1 zeros(1,2*length(s1)-2)],[s1 zeros(1,length(s1)-1)]);
+figure(5);
+plot(c5);
 
 
 %Inciso 4
