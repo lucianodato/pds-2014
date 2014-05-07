@@ -25,8 +25,9 @@ endfunction
 #Metodo en el dominio frecuencial
 
 #function [c] = convolucion(f,h)
-#	LT=length(f)+length(h)-1;% Es decir 2*N-1 Donde N = longitud(f)+longitud(h)
-#	f = [f zeros(1,LT-length(f))];%Completo con zero padding
-#	h = [h zeros(1,LT-length(h))];
+#	LT=length(f)+length(h)-1;% LT es la longitud del resultado de la convolucion lineal
+#	f = [f zeros(1,2*LT-length(f))];%Completo con zero padding para que f y h me queden de 2*LT-1
+#	h = [h zeros(1,2*LT-length(h))];
 #	c = ifft(fft(f).*fft(h));%Por propiedad de la fft la convolucion en el tiempo es multiplicacion en frecuencia
+	%El tema es el siguiente, esto retorna la convolucion circular, si quisiera la lineal solo retorno c = c(1:N)
 #endfunction
