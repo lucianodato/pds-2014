@@ -1,25 +1,25 @@
 % Elegimos de señal periodica un seno
-
 Fm = 100;
 N=1/Fm;
 t_ini=0;
 t_fin=1;
 t=t_ini:N:t_fin-N;
-fs_1=10;
+fs_1=11;
 fs_2=5;
 
 s1 = sin(2*pi*t*fs_1);
-s2 = sin(2*pi*t*fs_2);
+s2 = square(2*pi*t*fs_2);
 
 %Faltaria para cada inciso hacer una grafica que complete el lado de la igualdad faltante para poder compararlos
 
 %Inciso 1
-c1 = convolucion(s1,s2);
+c1 = convolucion_f(s1,s2);
 
 figure(1);
-plot(c1); 
+plot(real(c1)); 
 
 %Inciso 2
+figure(2);
 c2 = conv(s1,s2);
 plot(c2);
 
@@ -32,26 +32,23 @@ plot(c5);
 
 
 %Inciso 4
+%Aca se ve bien como difieren la convolucion circular y la lineal tanto en valores como en cantidad de muestras
 
-f1 = fft(s1);
-f2 = fft(s2);
-c3= real(ifft(f1.*f2));
+c3= ifft(fft(s1).*fft(s2));
 
 figure(3);
-plot(c3);
+plot(real(c3));
 
 %Inciso 5 
 
 N=length(s1);
 x = s1;
 y = s2;
-x(N+1:2*N) =  0;
-y(N+1:2*N) =  0;
+x = [x zeros(1,N-1)];
+y = [y zeros(1,N-1)];
 
-x1 = fft(x);
-y1 = fft(y);
-c4= real(ifft(x1.*y1));
+c4= ifft(fft(x).*fft(y));
 
 figure(4);
-plot(c4);
+plot(real(c4));
 

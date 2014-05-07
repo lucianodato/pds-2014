@@ -1,10 +1,9 @@
 function [c] = convolucion(f,h)
 	lf = length(f);%saco la longitud de la funcion
 	lh = length(h);%saco la longitud del impulso
-	N = max(lf,lh);% N es la longitud mayor
-	
-	%Como las funciones no tienen el largo necesario para poder hacer convolucion circular hago zero padding
-	%Teniendo en cuenta que pasa cuando el largo es diferente entre ambas
+	N = lh + lf -1;% N es la longitud mayor
+	%disp(N);
+	%Hago padding para asegurarme que el resultado de la convolucion circular sea igual que el de la lineal
 	f=[f zeros(1,N-lf)];%es otro vector mas largo que lo contiene a f y agrega ceros al final
 	h=[h zeros(1,N-lh)];
 
@@ -19,15 +18,6 @@ function [c] = convolucion(f,h)
 			c(n+1)=c(n+1) + f(i+1)*h(j+1);
 		endfor
 	endfor
-	
+	%disp(length(c));
 endfunction
 
-#Metodo en el dominio frecuencial
-
-#function [c] = convolucion(f,h)
-#	LT=length(f)+length(h)-1;% LT es la longitud del resultado de la convolucion lineal
-#	f = [f zeros(1,2*LT-length(f))];%Completo con zero padding para que f y h me queden de 2*LT-1
-#	h = [h zeros(1,2*LT-length(h))];
-#	c = ifft(fft(f).*fft(h));%Por propiedad de la fft la convolucion en el tiempo es multiplicacion en frecuencia
-	%El tema es el siguiente, esto retorna la convolucion circular, si quisiera la lineal solo retorno c = c(1:N)
-#endfunction

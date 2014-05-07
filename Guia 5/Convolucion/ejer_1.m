@@ -13,7 +13,7 @@ x= [1 2 2];
 y= [2 5 6.5 3 1];
 [h,r]= deconv(y,x);
 
-c = conv(s,h,"same"); % "same" convolución lineal - "full" convolución circular (por defecto)
+c = conv(s,h);
 
 figure(1);
 subplot(2,1,1);
