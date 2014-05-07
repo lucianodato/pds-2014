@@ -21,3 +21,12 @@ function [c] = convolucion(f,h)
 	endfor
 	
 endfunction
+
+#Metodo en el dominio frecuencial
+
+#function [c] = convolucion(f,h)
+#	LT=length(f)+length(h)-1;% Es decir 2*N-1 Donde N = longitud(f)+longitud(h)
+#	f = [f zeros(1,LT-length(f))];%Completo con zero padding
+#	h = [h zeros(1,LT-length(h))];
+#	c = ifft(fft(f).*fft(h));%Por propiedad de la fft la convolucion en el tiempo es multiplicacion en frecuencia
+#endfunction

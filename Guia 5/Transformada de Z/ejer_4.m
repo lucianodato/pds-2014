@@ -1,7 +1,7 @@
 %Transformada de Laplace
 Fm2 = 50;
 Ts = 1/Fm2;
-w2= 0:Ts:2*pi-Ts;
+w2= 0:Ts:2*pi-Ts;%Podria ser freq = 0:Fm2 --> w = 2*pi*freq*Ts
 z2 = exp(j*w2);%Aproximo la s con la transformada de furier o la s "ideal"
 s = log(z2)/Ts;
 f2=-pi:Ts:pi-Ts;
