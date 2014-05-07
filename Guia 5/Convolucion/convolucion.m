@@ -1,11 +1,11 @@
 function [c] = convolucion(f,h)
 	lf = length(f);%saco la longitud de la funcion
 	lh = length(h);%saco la longitud del impulso
-	N = lh + lf -1;% N es la longitud mayor
+	N = max(lf,lh);
 	%disp(N);
 	%Hago padding para asegurarme que el resultado de la convolucion circular sea igual que el de la lineal
-	f=[f zeros(1,N-lf)];%es otro vector mas largo que lo contiene a f y agrega ceros al final
-	h=[h zeros(1,N-lh)];
+	f=[f zeros(1,2*N-1-lf)];%es otro vector mas largo que lo contiene a f y agrega ceros al final
+	h=[h zeros(1,2*N-1-lh)];
 
 	% dos ciclos for, uno por cada sumatoria
 	% ver http://cnx.org/content/m10786/latest/
