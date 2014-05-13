@@ -4,7 +4,7 @@ T = 1/Fm;
 fc = 500;
 fn = fc*2/Fm;%Normalizo la frecuencia de corte para que este entre 0 y 1 --> fc / (Fm/2)
 wc = 2*pi*fc;% Expreso 500hz en radianes -- frecuencia de corte del filtro
-n=4;%orden del filtro
+n=2;%orden del filtro
 
 %Realizo el diseño del analogico H(s)
 function [Hs] = mybutter(wc,n,s,tipo)
@@ -16,21 +16,22 @@ function [Hs] = mybutter(wc,n,s,tipo)
 		s = wc./s; %Pasa altos
 	endif
 	
-	B=1;
+	% http://en.wikipedia.org/wiki/Butterworth_filter
+	A=1;
 	if(mod(n,2) == 0)
 		%Para los ordenes pares
 		for i = 1:n/2
-			B .*= s.^2 - 2*s*cos( ((2*i+n-1)/(2*n))*pi ) + 1;
+			A .*= s.^2 - 2*s*cos( ((2*i+n-1)/(2*n))*pi ) + 1;
 		endfor
 	else
 		%Para los ordenes impares
 		for i = 1:(n-1)/2
-			B .*= s.^2 - 2*s*cos( ((2*i+n-1)/(2*n))*pi ) + 1;
+			A .*= s.^2 - 2*s*cos( ((2*i+n-1)/(2*n))*pi ) + 1;
 		endfor
-		B *= s + 1; 
+		A*= s + 1; 
 	endif
 	
-	Hs = 1./B;
+	Hs = 1./A;
 	
 endfunction
 
