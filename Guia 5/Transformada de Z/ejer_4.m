@@ -2,7 +2,7 @@
 Fm2 = 50;
 Ts = 1/Fm2;
 w2= 0:Ts:2*pi-Ts;%Podria ser freq = 0:Fm2 --> w = 2*pi*freq*Ts
-z2 = exp(j*w2);%Aproximo la s con la transformada de furier o la s "ideal"
+z2 = exp(-j*w2);%Aproximo la s con la transformada de furier o la s "ideal"
 s = log(z2)/Ts;
 f2=-pi:Ts:pi-Ts;
 
@@ -40,7 +40,7 @@ f=-pi:T:pi-T;
 
 %Transformada de Euler
 
-s1 = (1-z)./T;
+s1 = (1-z.^-1)./T;
 h1 = (12500*s1) ./ (44*s1.^2 + 60225*s1 + 625*10^4);
 h1_f = [h1(floor(length(h1)/2)+1:length(h1)) h1(1:floor(length(h1)/2))];
 
@@ -53,7 +53,7 @@ plot(f*(Fm/(2*pi)),angle(h1_f));
 
 %Transformada Bilineal
 
-s2 = (2/T) * (1-z)./(z+1);
+s2 = (2/T) * (1 - z.^-1)./(z.^-1 + 1);
 h2 = (12500*s2) ./ (44*s2.^2 + 60225*s2 + 625*10^4);  
 
 h2_f = [h2(floor(length(h2)/2)+1:length(h2)) h2(1:floor(length(h2)/2))];

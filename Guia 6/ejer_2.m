@@ -46,14 +46,14 @@ Hz = mybutter(wc,n,s,"pasa altos");
 figure(1,"name","Implementacion propia de Butterworth sin prewarping");
 plot(w*Fm/(2*pi),abs(Hz));
 
-#%Version con prewarping
-#s = (2/T) * j * tan(w/2); %BZT con prewarpig
+%Version con prewarping
+wc = (2/T) * tan(wc*T/2); %BZT con prewarpig
 
-#%Creo el filtro
-#Hz2 = mybutter(wc,n,s,"pasa altos");
+%Creo el filtro
+Hz2 = mybutter(wc,n,s,"pasa altos");
 
-#figure(2,"name","Implementacion propia de Butterworth con prewarping");
-#plot(w*Fm/(2*pi),abs(Hz2));
+figure(2,"name","Implementacion propia de Butterworth con prewarping");
+plot(w*Fm/(2*pi),abs(Hz2));
 
 
 %Grafico el resultado correcto
