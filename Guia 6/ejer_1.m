@@ -3,7 +3,7 @@
 %Polos - A
 %paso de cordenadas polares (los grados los paso a radianes) a cartesianas y armo cada una de las raices
 r1= 0.95;
-r2= 0.80;
+r2= 0.8;
 
 x=r1*cos(45*pi/180);
 y=r1*sin(45*pi/180);
@@ -58,14 +58,19 @@ zplane(B,A);
 
 Fm = 200;
 T = 1/Fm;
-w = 0:T:pi-T;
+w = 0:T:2*pi-T;
 z = exp(j*w);
 
-Hz = B(4)*z.^-3 + B(3)*z.^-2 + B(2)*-z + B(1) / A(4)*z.^-3 + A(3)*z.^-2 + A(2)*-z + A(1); 
+B=(z-ceros(1)).*(z-ceros(2)).*(z-ceros(3)).*(z-ceros(4));
+A=(z-polos(1)).*(z-polos(2)).*(z-polos(3)).*(z-polos(4));
+
+Hz = B./A; 
 
 % b) Grafico la respuesta en frecuencia H(z)
 figure(2,"name","Respuesta en frecuencia de 0 a PI sin normalizar");
-plot(w*Fm/pi,abs(Hz));
+N = floor(length(Hz)/2);
+
+plot( w(1:N)*(Fm/(2*pi)),abs(Hz(1:N)));%Dibujo solo la mitad del espectro
 
 % c) Normalizo la Amplitud aplicando la ganancia necesesaria calculada
 
@@ -74,11 +79,10 @@ g = max(abs(Hz));
 %Si la amplitud del filtro es superior reduciria de lo contrario aumenta
 %Multiplico H(z) por 1/g para normalizar
 
-w = 0:T:2*pi-T;
-z = exp(j*w);
-Hzn = 1/g * (B(4)*z.^-3 + B(3)*z.^-2 + B(2)*-z + B(1) / A(4)*z.^-3 + A(3)*z.^-2 + A(2)*-z + A(1));
+Hzn = 1/g * Hz;
+
 figure(3,"name","Respuesta de 0 a 2*PI Normalizada");
-plot(w*Fm/pi,abs(Hzn));%--> w a hz -->divido por 2*pi y para desnormalizar multiplico por Fm/2 o sea multiplico por Fm/pi
+plot(w*Fm/(2*pi),abs(Hzn));%--> w a hz -->divido por 2*pi y para desnormalizar multiplico por Fm/2 o sea multiplico por Fm/pi
 
 % d) Cambiar los radios arriba y ver
 
@@ -96,19 +100,23 @@ subplot(2,2,2);
 plot(abs(fft(s)));
 
 %Filtro s con el filtro normalizado en el dominio frecuencial
-%Para esto podria usar la funcion de convolucion que usa el dominio frecuencial (Es lo mismo que multiplicar en frecuencia) Con esto zafamos de los problemas de la convolucion discreta
+%Para esto podria usar la funcion de convolucion que usa el dominio frecuencial (Es lo mismo que multiplicar en frecuencia) Con esto safamos de los problemas de la convolucion discreta
 sf = convolucion_f(s,real(ifft(Hzn)));
 subplot(2,2,3);
-plot(real(sf(1:Fm)));
+plot(real(sf));
 subplot(2,2,4);
 plot(abs(fft(sf)));
 
 % f) Lo mismo pero con Fm = 125
-Fm2 = 125;
+Fm2 = 120;
 T2 = 1/Fm2;
 w2 = 0:T2:2*pi-T2;
 z2 = exp(j*w2);
-Hzn2 = 1/g * (B(4)*z2.^-3 + B(3)*z2.^-2 + B(2)*-z2 + B(1) / A(4)*z2.^-3 + A(3)*z2.^-2 + A(2)*-z2 + A(1));
+
+B=(z-ceros(1)).*(z-ceros(2)).*(z-ceros(3)).*(z-ceros(4));
+A=(z-polos(1)).*(z-polos(2)).*(z-polos(3)).*(z-polos(4));
+
+Hzn2 = 1/g * (B./A); 
 
 t2 = 0:T2:1-T2;
 s3 = sin(2*pi*15*t2);
@@ -116,7 +124,7 @@ s4 = sin(2*pi*25*t2);
 
 s_2 = s3+s4;
 
-figure(5,"name","Filtrado de una señal con el filtro normalizado - Fm = 125");
+figure(5,"name","Filtrado de una señal con el filtro normalizado - Fm = 120");
 subplot(2,2,1);
 plot(s_2);
 subplot(2,2,2);
@@ -125,7 +133,7 @@ plot(abs(fft(s_2)));
 %Filtro s con el filtro normalizado en el dominio frecuencial
 sf_2 = convolucion_f(s_2,real(ifft(Hzn2)));
 subplot(2,2,3);
-plot(real(sf_2(1:Fm2)));
+plot(real(sf_2));
 subplot(2,2,4);
 plot(abs(fft(sf_2)));
 
