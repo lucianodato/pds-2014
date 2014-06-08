@@ -1,18 +1,20 @@
+clc
+clear all
+close all
 %Aca cargamos los parametros de inicializacion
 G=1;%Factor de ganancia
 wc1 = 130;%F de crossover
-wc2 = 20;%F de rango del oido
-orden_f = 1024;%orden de los filtros
+wc2 = 16;%F de rango del oido
+orden_f = 5000;%orden de los filtros
 fover = 4;%Factor de interpolacion
-op=4; %opcion de hardclipping
+op=1; %opcion de hardclipping
 %No es necesario hacer compensacion de delay ya que fir1 compensa internamente
 
 %En primera instancia cargamos el archivo
 
-[original,Fm,bps] = wavread("original.wav");
+[original,Fm,bps] = wavread('original.wav');
 
 %Dividimos los canales
-
 c_left = original(:,1);
 c_right = original(:,2);
 
@@ -20,81 +22,100 @@ c_right = original(:,2);
 
 %Primero calculamos la frecuencia de corte
 
-%Fecuencia de corte para los filtros en el crossover
+%Frecuencia de corte para los filtros en el crossover
 omegad1 = wc1/(Fm/2);
-
 %Filtros para los canales limpios
-hpfl = fir1(orden_f,omegad1,"high","blackman");
-hpfr = fir1(orden_f,omegad1,"high","blackman");
+b_hpf = fir1(orden_f,omegad1,'high',hamming(orden_f+1));
+
+% %Desarrollo del sistema
+% % filtrado de CANALES ORIGINALES
+% %Filtramos la señal original para que quede la se�al con la frecuancias
+% mayores a wc1, las frecuancias menores a wc1 son las que vamos a
+% modificar para lograr el efecto de mejora de bajos
+%HPF1 y HPF2
+ co_left = filter(b_hpf,1,c_left);
+ co_right = filter(b_hpf,1,c_right);
+ 
+ 
+% %CANAL PARALELO
+% dejamos el por el momento los canales exteriores asi y
+% tomamos de nuevo la se�al original
+ %Sobremuestreamos la señal con un factor de 4 veces
+% cs_left = upsample(c_left,fover);
+% cs_right = upsample(c_right,fover);
+%aumento 4 veces el muestreo de la se�al
+
+%mono
+suma=c_left+c_right; %hago mono derecho con la se�ales l y r ofiginales
+pmono_1=suma./max(suma); %normalizo... esto lo puedo sacar
+
+%Upsampling  --- lo saque para testear como suena asi.
+%para test con up y down descomentar esto y cambiar pmono5 , por pmono6
+% y NuevaFrec poner en x 4
+%NOTA: uso esta forma de Upsampling xq la funcion "Upsampling" no terminaba
+%mas en matlab, aca va bien
+            % Tm1 = fft(c_left);
+            % N = length(c_left);
+            % X = [Tm1(1:N/2); zeros((fover-1)*N,1); Tm1(N/2+1:N);];
+            % cs_left = real(ifft(X)).*fover;%el 4 es xq al aumentar el numero de puntos , la mag de los palitos se va ver reducido a la mitad
+            % 
+
+            % Tm1 = fft(c_right);
+            % N = length(c_right);
+            % X = [Tm1(1:N/2); zeros((fover-1)*N,1); Tm1(N/2+1:N);];
+            % cs_right = real(ifft(X)).*fover;%el 4 es xq al aumentar el numero de puntos , la mag de los palitos se va ver reducido a la mitad
 
 
-%Desarrollo del sistema
+% 
+% %Hacemos monofonica la señal paralela
+%NOTA: segun el dibujo del pdf "tp" abria que hacerla mono antes del
+%upsampling
+% pmono_1 = real(cs_left)+real(cs_right);
 
-%CANALES ORIGINALES
+% %Como interpole, aumente el numero de puntos, por lo tanto la fm de mi se�al cambio
+% % y debo dise�ar de nuevo al filtro con los nuevos parametros de dise�o
+% % %Filtros para el canal paralelo
+% % %Frecuencia de corte para los filtros en el crossover
+ NuevaFrec=Fm*1;
 
-%Filtramos la señal original para eliminar la parte del espectro que no vamos a procesar
-co_left = filter(hpfl,1,c_left);
-co_right = filter(hpfr,1,c_right);
+% % 
+% % %Frecuencia de corte para aislar las frecuencias que escucha el oido humano - 20hz es la mas baja
+ omegad2_n = wc2/(NuevaFrec/2);
+% % filtro pasa alto de 20 hz
+ hpfp = fir1(orden_f,omegad2_n,'high',hamming(orden_f+1));
 
+% % 
+% % Limpiamos todo por debajo de 20Hz
+ pmono_2 = filter(hpfp,1,pmono_1);
+ 
+% %Aplicamos el NLD
+% 
 
-f=abs(fft(co_left));
-plot(f(1:Fm/2));
+  pmono_3 = softclipping(op,pmono_2);
 
-f=abs(fft(co_left));
-plot(f);
+% % 
+% % %Filtramos para eliminar armonicos en la frecuencia de crossover
+% %Ejemplo 130Hz
+  omegad1_n = wc1/(NuevaFrec/2);
+  lpfp = fir1(orden_f,omegad1_n,'low',hamming(orden_f+1));
+  pmono_4 = filter(lpfp,1,pmono_3);
+%  
+  plot(abs(fft(pmono_4)))
+  soundsc(pmono_4)
+% 
+% %Normalizamos la ganancia
+ pmono_5 = G*pmono_4;
+% 
+% %Submuestreamos la señal
+ %pmono_6 = downsample(pmono_5,fover);
+% %SALIDA SUMADA
 
-%CANAL PARALELO
+ s_left = co_left + real(pmono_5);
+ s_right = co_right + real(pmono_5);
 
-%Sobremuestreamos la señal con un factor de 4 veces
-cs_left = upsample(c_left,fover);
-cs_right = upsample(c_right,fover);
-
-%Hacemos monofonica la señal paralela
-pmono_1 = cs_left+cs_right;
-
-%Filtros para el canal paralelo
-%Fecuencia de corte para los filtros en el crossover
-omegad1 = wc1/(Fm*fover/2);
-
-%Frecuencia de corte para aislar las frecuencias que escucha el oido humano - 20hz es la mas baja
-omegad2 = wc2/(Fm*fover/2);
-
-hpfp = fir1(orden_f,omegad2,"high","blackman");
-lpfp = fir1(orden_f,omegad1,"low","blackman");
-
-%Filtramos para quedarnos con el espectro audible
-pmono_2 = filter(hpfp,1,pmono_1);
-
-%Aplicamos el NLD
-
-pmono_3 = softclipping(op,pmono_2);
-
-%Filtramos para eliminar armonicos en la frecuencia de crossover
-pmono_4 = filter(lpfp,1,pmono_3);
-
-%Normalizamos la ganancia
-pmono_5 = G*pmono_4;
-
-%Submuestreamos la señal
-pmono_6 = downsample(pmono_5,fover);
-
-
-
-
-%SALIDA SUMADA
-
-s_left = co_left + pmono_6';
-s_right = co_right + pmono_6';
-
-%Podriamos volver a compensar para que la señal quede en 0
-
-%La cantidad de muestras total corridas son justo igual que el orden de los filtros porque hay 2 filtros en 
-%la linea del sistema con mas delay, esta es el canal paralelo
-
-fin_left = s_left(orden_f:end);
-fin_right = s_right(orden_f:end);
-
-wavwrite([fin_left,fin_right],Fm,bps,"Procesado");
+ s_left=s_left./max(s_left);
+ s_right=s_right./max(s_right);
+ wavwrite([s_left,s_right],Fm,bps,'Procesado');
 
 
 
