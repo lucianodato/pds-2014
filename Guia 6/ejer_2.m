@@ -36,7 +36,7 @@ function [Hs] = mybutter(wc,n,s,tipo)
 endfunction
 
 %Uso Bzt para hacer H(z)
-w = 0:T:2*pi-T;
+w = 0:T:pi-T;
 z = exp(j*w);
 s = (2/T) * (1 - z.^-1)./(z.^-1 + 1); %BZT
 
@@ -45,7 +45,7 @@ Hz = mybutter(wc,n,s,"pasa altos");
 
 %grafico su respuesta en frecuencia
 figure(1,"name","Implementacion propia de Butterworth sin prewarping");
-plot(w*Fm/(2*pi),abs(Hz));
+plot(w*Fm/(pi),abs(Hz));
 
 %Version con prewarping
 wc = (2/T) * tan(wc*T/2); %BZT con prewarpig
@@ -60,5 +60,5 @@ plot(w*Fm/(2*pi),abs(Hz2));
 %Grafico el resultado correcto
 figure(3,"name","Implementacion de matlab");
 [B,A] = butter(n,fn,"high");
-[h,w] = freqz(B,A,Fm,"whole",Fm);
+[h,w] = freqz(B,A,Fm,Fm/2,Fm);
 plot(w,abs(h));
