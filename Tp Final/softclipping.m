@@ -29,9 +29,9 @@ function [y] = softclipping(op,K,x)
 				endif
 			endfor
 		case 4 % James Johnston
-		for i = 1:n
-			y(i) = x(i) / (K*abs(x(i)) + 1);
-		endfor
+			for i = 1:n
+				y(i) = x(i) / (K*abs(x(i)) + 1);
+			endfor
 	endswitch
 endfunction
 		
