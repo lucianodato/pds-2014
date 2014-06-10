@@ -10,12 +10,12 @@ tipo2 = 'high';
 tipo3 = 'low';
 
 %IIR
-orden_i = 5;
+orden_i = 4;
 
 over = 1;% 0 - Sin remuestreo / 1 - Con Remuestreo
 fover = 4;%Factor de remuestreo
 
-op = 1;%opcion de softclipping (1-TSQ / 2-EXP5 / 3-Sinusoidal / 4-James Johnston)
+op = 4;%opcion de softclipping (1-TSQ / 2-EXP5 / 3-Sinusoidal / 4-James Johnston)
 K = 2.5;%factor de distorsion del metodo de James Johnston (Entre 1 y 5)
 
 M = 1;%Factor de mezcla canal paralelo (Entre 0 y 2 / 1 y 3 para James Johnson)
@@ -81,7 +81,7 @@ omega3 = wc3/f_nyquist;
 ef_left = filter(hpfdb,hpfda,e_left);
 ef_right = filter(hpfdb,hpfda,e_right);
 
-wavwrite([ef_left,ef_right],Fm,bps,"Canal directo filtrado");
+%wavwrite([ef_left,ef_right],Fm,bps,"Canal directo filtrado");
 
 %-------------CANAL PARALELO-------------
 
@@ -111,7 +111,7 @@ pmono = filter(lpfpb,lpfpa,pmono);
 
 pmono = M .* ceil_norm/max(pmono) .* pmono;
 
-wavwrite(pmono,Fm,bps,"Canal paralelo procesado");
+%wavwrite(pmono,Fm,bps,"Canal paralelo procesado");
 
 %-------------SALIDA SUMADA-------------
 
@@ -136,14 +136,14 @@ wavwrite([s_left,s_right],Fm,bps,"Procesado");
 
 %----------->Pruebas<-----------
 
-figure(1,"name","Canal Directo - Filtrado")
-freqz(hpfdb,hpfda,N,0,Fm);
+#figure(1,"name","Canal Directo - Filtrado")
+#freqz(hpfdb,hpfda,N,0,Fm);
 
-figure(2,"name","Canal Paralelo - Filtro Pasa Bajos")
-freqz(hpfpb,hpfpa,N,0,Fm);
+#figure(2,"name","Canal Paralelo - Filtro Pasa Bajos")
+#freqz(hpfpb,hpfpa,N,0,Fm);
 
-figure(3,"name","Canal Paralelo - Filtro Pasa Altos")
-freqz(lpfpb,lpfpa,N,0,Fm); 
+#figure(3,"name","Canal Paralelo - Filtro Pasa Altos")
+#freqz(lpfpb,lpfpa,N,0,Fm); 
 
 #figure(4,"name","Canal Directo - Respuesta Filtrada")
 #fd=abs(fft(ef_left));
