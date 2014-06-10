@@ -10,8 +10,8 @@ tipo2 = 'high';
 tipo3 = 'low';
 
 %FIR
-orden_f = 64;%orden de los filtros
-delay_f = orden_f;
+orden_f = 10000;%orden de los filtros
+delay_f = orden_f/2;
 tipo_ventana = 'blackman';%Tipo de ventana para los filtros
 
 over = 0;% 0 - Sin remuestreo / 1 - Con Remuestreo
@@ -79,16 +79,28 @@ lpfpb = fir1(orden_f,omega3,tipo3,tipo_ventana);
 
 %-------------CANALES ORIGINALES---------
 
-%Filtramos la señal original para eliminar la parte del espectro que no vamos a procesar
-ef_left = fftfilt(hpfdb,e_left);
-ef_right = fftfilt(hpfdb,e_right);
+%Agrego ceros a la señal de entrada para no perder muestras al filtrar
+ec_left = [e_left;zeros(delay_f,1)];
+ec_right = [e_right;zeros(delay_f,1)];
 
-wavwrite([ef_left(delay_f/2:end),ef_right(delay_f/2:end)],Fm,bps,"Canal directo filtrado");
+%Filtramos la señal original para eliminar la parte del espectro que no vamos a procesar
+ef_left = fftfilt(hpfdb,ec_left);
+ef_right = fftfilt(hpfdb,ec_right);
+
+%Elimino los ceros al comienzo
+ef_left = ef_left(delay_f+1:end);
+ef_right = ef_right(delay_f+1:end);
+
+wavwrite([ef_left,ef_right],Fm,bps,"Canal directo filtrado");
 
 %-------------CANAL PARALELO-------------
 
+%Agrego ceros a la señal de entrada para no perder muestras al filtrar (agrego mas ceros porque hay 2 filtros)
+ec_left = [ec_left;zeros(delay_f,1)];
+ec_right = [ec_right;zeros(delay_f,1)];
+
 %Generamos la señal monofonica paralela
-pmono = e_left+e_right;
+pmono = ec_left+ec_right;
 
 %Filtramos la señal paralela para quedarnos con el espectro audible
 pmono = fftfilt(hpfpb,pmono);
@@ -113,13 +125,16 @@ pmono = fftfilt(lpfpb,pmono);
 
 pmono = M .* ceil_norm/max(pmono) .* pmono;
 
-wavwrite(pmono(delay_f:end),Fm,bps,"Canal paralelo procesado");
+%Elimino los ceros al comienzo
+pmono = pmono(2*delay_f+1:end);
+
+wavwrite(pmono,Fm,bps,"Canal paralelo procesado");
 
 %-------------SALIDA SUMADA-------------
 
 %Volvemos a reconstruir la señal
-s_left = ef_left(delay_f/2:end-delay_f/2) + pmono(delay_f:end)';
-s_right = ef_right(delay_f/2:end-delay_f/2) + pmono(delay_f:end)';
+s_left = ef_left + pmono';
+s_right = ef_right + pmono';
 
 %Normalizo la señal de salida para evitar clipping (segun la que tenga mayor amplitud)
 norl = abs(max(s_left ));
@@ -136,7 +151,7 @@ endif
 %Escribimos el archivo procesado
 wavwrite([s_left,s_right],Fm,bps,"Procesado");
 
-#%----------->Pruebas
+#%----------->Pruebas<-----------
 
 #figure(1,"name","Canal Directo - Filtrado")
 #freqz(hpfdb,hpfda,N,Fm);
@@ -158,6 +173,9 @@ wavwrite([s_left,s_right],Fm,bps,"Procesado");
 #figure(6,"name","Resultado Final")
 #ff=abs(fft(s_left+s_right));
 #plot([1:Fm/2],mag2db(ff(1:Fm/2)));
+
+%TODO
+%Arreglar los filtros fir para que la respuesta sea precisa
 
 
 
