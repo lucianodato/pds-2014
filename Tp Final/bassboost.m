@@ -1,23 +1,26 @@
 %----------CONFIGURACION----------
 
-nombre_archivo = "original.wav";%nombre del archivo a procesar
+nombre_archivo = "Original.wav";%nombre del archivo a procesar
 
-tipo1 = "high";% high / low / bandpass
-tipo2 = "high";
-tipo3 = "low";
-wc1 = 150;%F del tipo 1
+wc1 = 100;%F del tipo 1
 wc2 = 20;%F del tipo 2
-wc3 = 150;%F del tipo 3
-orden_f = 64;%orden de los filtros
-tipo_ventana = "blackman";%Tipo de ventana para los filtros
+wc3 = 500;%F del tipo 3
+tipo1 = 'high';% high / low / bandpass
+tipo2 = 'high';
+tipo3 = 'low';
 
-over = 1;% 0 - Sin remuestreo / 1 - Con Remuestreo
+%FIR
+orden_f = 64;%orden de los filtros
+delay_f = orden_f;
+tipo_ventana = 'blackman';%Tipo de ventana para los filtros
+
+over = 0;% 0 - Sin remuestreo / 1 - Con Remuestreo
 fover = 4;%Factor de remuestreo
 
-op = 4;%opcion de softclipping (1-TSQ / 2-EXP5 / 3-Sinusoidal / 4-James Johnston)
+op = 1;%opcion de softclipping (1-TSQ / 2-EXP5 / 3-Sinusoidal / 4-James Johnston)
 K = 2.5;%factor de distorsion del metodo de James Johnston (Entre 1 y 5)
 
-M = 2;%Factor de mezcla canal paralelo (Entre 0 y 2 / 1 y 3 para James Johnson)
+M = 1;%Factor de mezcla canal paralelo (Entre 0 y 2 / 1 y 3 para James Johnson)
 ceil_norm = 0.95;%techo de normalizado para evitar clipping
 
 N = 1024;%Ventana para las graficas de respuesta de frecuencias de los filtros (512/1024/4096)
@@ -38,6 +41,8 @@ N = 1024;%Ventana para las graficas de respuesta de frecuencias de los filtros (
 
 [original,Fm,bps] = wavread(nombre_archivo);
 
+f_nyquist = Fm/2;
+
 %Dividimos los canales
 
 e_left = original(:,1);
@@ -46,28 +51,28 @@ e_right = original(:,2);
 %--->Configuracion de Filtros<---
 
 %Fecuencia de corte para los filtros pasa altos de la señal directa (normalizacion)
-omega1 = wc1/(Fm/2);
+omega1 = wc1/f_nyquist;
 
 %Frecuencia de corte para aislar las frecuencias que escucha el oido humano - 20hz es la mas baja (normalizacion)
-omega2 = wc2/(Fm/2);
+omega2 = wc2/f_nyquist;
 
 %Frecuencia de corte para el pasa bajos que limpia armonicos no deseados (normalizacion)
-omega3 = wc3/(Fm/2);
+omega3 = wc3/f_nyquist;
 
+%FIR
 %Filtros para los canales limpios
-hpfd = fir1(orden_f,omega1,tipo1,tipo_ventana);
+hpfdb = fir1(orden_f,omega1,tipo1,tipo_ventana);
 
 %Filtros para el canal paralelo
-hpfp = fir1(orden_f,omega2,tipo2,tipo_ventana);
-lpfp = fir1(orden_f,omega3,tipo3,tipo_ventana);
-
+hpfpb = fir1(orden_f,omega2,tipo2,tipo_ventana);
+lpfpb = fir1(orden_f,omega3,tipo3,tipo_ventana);
 
 
 %-------------Desarrollo del sistema--------------
 
 % --(L)--|----------------(HPF)-------------------(+)--(L)--
 %        |                                         |
-%       (+)--(LPF)--(US)--(NLD)--(DS)--(BPF)--(G)--|
+%       (+)--(HPF)--(US)--(NLD)--(DS)--(LPF)--(G)--|
 %        |                                         |
 % --(R)--|----------------(HPF)-------------------(+)--(R)--
 
@@ -75,16 +80,14 @@ lpfp = fir1(orden_f,omega3,tipo3,tipo_ventana);
 %-------------CANALES ORIGINALES---------
 
 %Filtramos la señal original para eliminar la parte del espectro que no vamos a procesar
-%ef_left = filter(hpfl,1,e_left);
-%ef_right = filter(hpfr,1,e_right);
-ef_left = fftfilt(hpfd,e_left);%mas rapido que en el dominio temporal
-ef_right = fftfilt(hpfd,e_right);
+ef_left = fftfilt(hpfdb,e_left);
+ef_right = fftfilt(hpfdb,e_right);
 
-%wavwrite([ef_left,ef_right],Fm,bps,"Canal directo filtrado");
+wavwrite([ef_left(delay_f/2:end),ef_right(delay_f/2:end)],Fm,bps,"Canal directo filtrado");
 
 #%----------->Pruebas
 #figure(1,"name","Canal Directo - Filtrado")
-#freqz(hpfd,1,N,Fm);
+#freqz(hpfdb,hpfda,N,Fm);
 
 #figure(2,"name","Canal Directo - Respuesta Filtrada")
 #fd=abs(fft(ef_left));
@@ -96,7 +99,7 @@ ef_right = fftfilt(hpfd,e_right);
 pmono = e_left+e_right;
 
 %Filtramos la señal paralela para quedarnos con el espectro audible
-pmono = filter(hpfp,1,pmono);
+pmono = fftfilt(hpfpb,pmono);
 
 %Sobremuestreamos la señal con un factor de 4 veces
 if(over == 1)
@@ -113,20 +116,20 @@ if(over == 1)
 endif
 
 %Filtramos para eliminar armonicos en la frecuencias superiores de crossover
-%pmono = filter(lpfp,1,pmono);
-pmono = fftfilt(lpfp,pmono);%mas rapido que en el dominio temporal
+pmono = fftfilt(lpfpb,pmono);
 
 %Normalizamos la ganancia
-pmono = M .* pmono;
 
-%wavwrite(pmono,Fm,bps,"Canal paralelo procesado");
+pmono = ceil_norm/max(pmono) .* pmono;
+
+wavwrite(pmono(delay_f:end),Fm,bps,"Canal paralelo procesado");
 
 #%----------->Pruebas
 #figure(3,"name","Canal Paralelo - Filtro Pasa Bajos")
-#freqz(hpfp,1,N,Fm);
+#freqz(hpfpb,hpfpa,N,Fm);
 
 #figure(4,"name","Canal Paralelo - Filtro Pasa Altos")
-#freqz(lpfp,1,N,Fm); 
+#freqz(lpfpb,lpfpa,N,Fm); 
 
 #figure(5,"name","Canal Paralelo - Respuesta filtrada y procesada")
 #fp=abs(fft(pmono));
@@ -135,8 +138,8 @@ pmono = M .* pmono;
 %-------------SALIDA SUMADA-------------
 
 %Volvemos a reconstruir la señal
-s_left = ef_left + pmono';
-s_right = ef_right + pmono';
+s_left = ef_left(delay_f/2:end-delay_f/2) + pmono(delay_f:end)';
+s_right = ef_right(delay_f/2:end-delay_f/2) + pmono(delay_f:end)';
 
 %Normalizo la señal de salida para evitar clipping (segun la que tenga mayor amplitud)
 norl = abs(max(s_left ));
