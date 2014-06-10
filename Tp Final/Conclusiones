@@ -1,0 +1,25 @@
+En cuanto a la rapidez:
+-El metodo mas rapido es el de JJ
+-El segundo mas rapido es el SIN
+
+En cuanto a los Filtros
+-Los FIR no parecen funcionar correctamente para este caso de la manera que sabemos usarlos
+-Los IIR con Butter son suficientemente buenos, quizas tendriamos que probar con chebyshev tipo IIR
+-Las frecuencias de corte parecen ser las adecuadas, donde se conserva la limpieza de las frecuencias que no son
+ objetivo de mejora y aun asi se distingue bien el efecto sobre las que si lo son
+
+En cuanto al remuestreo
+-No parece tener mucho efecto en los resultados, o al menos no es distinguible a simple escucha
+ Esto debe ser porque se trabaja en frecuencias bajas donde la resolucion es por demas de buena para Fm = 44100
+
+
+En cuanto a las caracteristicas de cada tipo de softclipping
+-EXP5 y TSQ parecen ser los que suenan mas sucios
+-SIN y JJ parecen ser los mas limpios
+
+En cuanto a la comparacion con el archivo original
+-Los volumenes son diferentes, ya que al distorsionar y potenciar las frecuencias graves se cambia el balance
+ frecuencial y con ello el volumen. Para evitar el clipping en el algoritmo normalizamos, por lo tanto el volumen
+ del archivo procesado es menor (aprox 6 dB de diferencia). Es conveniente igualar los volumenes de los archivos
+ para compararlos
+
