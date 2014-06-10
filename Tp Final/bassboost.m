@@ -20,7 +20,7 @@ fover = 4;%Factor de remuestreo
 op = 1;%opcion de softclipping (1-TSQ / 2-EXP5 / 3-Sinusoidal / 4-James Johnston)
 K = 2.5;%factor de distorsion del metodo de James Johnston (Entre 1 y 5)
 
-M = 1;%Factor de mezcla canal paralelo (Entre 0 y 2 / 1 y 3 para James Johnson)
+M = 1;%Factor de mezcla canal paralelo (Entre 0 y 1)
 ceil_norm = 0.95;%techo de normalizado para evitar clipping
 
 N = 1024;%Ventana para las graficas de respuesta de frecuencias de los filtros (512/1024/4096)
@@ -85,14 +85,6 @@ ef_right = fftfilt(hpfdb,e_right);
 
 wavwrite([ef_left(delay_f/2:end),ef_right(delay_f/2:end)],Fm,bps,"Canal directo filtrado");
 
-#%----------->Pruebas
-#figure(1,"name","Canal Directo - Filtrado")
-#freqz(hpfdb,hpfda,N,Fm);
-
-#figure(2,"name","Canal Directo - Respuesta Filtrada")
-#fd=abs(fft(ef_left));
-#plot(mag2db(fd(1:Fm/2)));
-
 %-------------CANAL PARALELO-------------
 
 %Generamos la señal monofonica paralela
@@ -111,7 +103,6 @@ pmono = softclipping(op,K,pmono);
 
 %Submuestreamos la señal
 if(over == 1)
-	%pmono = downsample(pmono,fover);
 	pmono = decimate(pmono,fover,"fir");%Es mejor que downsample porque filtra el aliasing
 endif
 
@@ -120,20 +111,9 @@ pmono = fftfilt(lpfpb,pmono);
 
 %Normalizamos la ganancia
 
-pmono = ceil_norm/max(pmono) .* pmono;
+pmono = M .* ceil_norm/max(pmono) .* pmono;
 
 wavwrite(pmono(delay_f:end),Fm,bps,"Canal paralelo procesado");
-
-#%----------->Pruebas
-#figure(3,"name","Canal Paralelo - Filtro Pasa Bajos")
-#freqz(hpfpb,hpfpa,N,Fm);
-
-#figure(4,"name","Canal Paralelo - Filtro Pasa Altos")
-#freqz(lpfpb,lpfpa,N,Fm); 
-
-#figure(5,"name","Canal Paralelo - Respuesta filtrada y procesada")
-#fp=abs(fft(pmono));
-#plot(mag2db(fp(1:Fm/2)));
 
 %-------------SALIDA SUMADA-------------
 
@@ -157,6 +137,24 @@ endif
 wavwrite([s_left,s_right],Fm,bps,"Procesado");
 
 #%----------->Pruebas
+
+#figure(1,"name","Canal Directo - Filtrado")
+#freqz(hpfdb,hpfda,N,Fm);
+
+#figure(2,"name","Canal Directo - Respuesta Filtrada")
+#fd=abs(fft(ef_left));
+#plot(mag2db(fd(1:Fm/2)));
+
+#figure(3,"name","Canal Paralelo - Filtro Pasa Bajos")
+#freqz(hpfpb,hpfpa,N,Fm);
+
+#figure(4,"name","Canal Paralelo - Filtro Pasa Altos")
+#freqz(lpfpb,lpfpa,N,Fm); 
+
+#figure(5,"name","Canal Paralelo - Respuesta filtrada y procesada")
+#fp=abs(fft(pmono));
+#plot(mag2db(fp(1:Fm/2)));
+
 #figure(6,"name","Resultado Final")
 #ff=abs(fft(s_left+s_right));
 #plot([1:Fm/2],mag2db(ff(1:Fm/2)));
