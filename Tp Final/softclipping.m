@@ -34,4 +34,3 @@ function [y] = softclipping(op,K,x)
 			endfor
 	endswitch
 endfunction
-		

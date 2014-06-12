@@ -8,6 +8,7 @@ En cuanto a los Filtros
 -Las frecuencias de corte parecen ser las adecuadas, donde se conserva la limpieza de las frecuencias que no son
  objetivo de mejora y aun asi se distingue bien el efecto sobre las que si lo son
 -Para el caso de auriculares, la frecuencia de crossover seria conveniente subirla un poco para acrecentar el efecto
+-Al usar filtros que distorsionan la fase (IIR) cuando se suma nuevamente la señal procesada con la original se generan distorsiones en la magnitud de las frecuencia de la region donde se encuentran. VER (Linkwitz–Riley filter)
 
 En cuanto al remuestreo
 -No parece tener mucho efecto en los resultados, o al menos no es distinguible a simple escucha
